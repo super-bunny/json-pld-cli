@@ -1,5 +1,8 @@
-import os
+import argparse
 import json
+import os
+
+import commands
 
 
 def find_json_file() -> str:
@@ -17,6 +20,23 @@ def read_file(file_path) -> str:
     return file_content
 
 
+COMMAND_TABLE = {
+    'duration': lambda arguments: commands.duration_cmd(pld_content, arguments.get('verbose', False)),
+    'test': lambda arguments: print(arguments)
+}
+
 json_file_path = find_json_file()
 pld_content = json.loads(read_file(json_file_path))
-print(pld_content)
+
+parser = argparse.ArgumentParser(description='CLI to generate and manipulate Project Log Document JSON')
+subparsers = parser.add_subparsers(dest="command")
+parser_duration = subparsers.add_parser('duration')
+parser_duration.add_argument('-v', type=bool, dest='verbose', const=True, default=False, nargs='?',
+                             help='print estimated duration for each user story')
+parser_duration = subparsers.add_parser('test')
+
+args = parser.parse_args()
+if args.command in COMMAND_TABLE:
+    COMMAND_TABLE[args.command](vars(args))
+else:
+    parser.print_help()
