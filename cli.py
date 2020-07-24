@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import sys
 
 import commands
 
@@ -26,6 +27,9 @@ COMMAND_TABLE = {
 }
 
 json_file_path = find_json_file()
+if json_file_path is None:
+    print('No json file found')
+    sys.exit(1)
 pld_content = json.loads(read_file(json_file_path))
 
 parser = argparse.ArgumentParser(description='CLI to generate and manipulate Project Log Document JSON')
