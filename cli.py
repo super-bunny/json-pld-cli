@@ -23,6 +23,7 @@ def read_file(file_path) -> str:
 
 COMMAND_TABLE = {
     'duration': lambda arguments: commands.duration_cmd(pld_content, arguments.get('verbose', False)),
+    'distribution': lambda arguments: commands.distribution_cmd(pld_content),
     'test': lambda arguments: print(arguments)
 }
 
@@ -37,6 +38,7 @@ subparsers = parser.add_subparsers(dest="command")
 parser_duration = subparsers.add_parser('duration')
 parser_duration.add_argument('-v', type=bool, dest='verbose', const=True, default=False, nargs='?',
                              help='print estimated duration for each user story')
+parser_repartition = subparsers.add_parser('distribution')
 parser_duration = subparsers.add_parser('test')
 
 args = parser.parse_args()

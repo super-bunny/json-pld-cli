@@ -14,3 +14,20 @@ def total_estimated_work_duration(pld_content, verbose_print=False) -> int:
                                       f'{user_story["name"]}')
                             total_duration += user_story['estimatedDuration']
     return total_duration
+
+
+def get_distribution(pld_content):
+    distribution = {}
+    if 'deliverables' in pld_content:
+        for deliverables in pld_content['deliverables']:
+            if 'subsets' in deliverables:
+                for subset in deliverables['subsets']:
+                    if 'userStories' in subset:
+                        for user_story in subset['userStories']:
+                            assignments = user_story['assignments']
+                            for user in assignments:
+                                if distribution.get(user):
+                                    distribution[user] += user_story['estimatedDuration'] / len(assignments)
+                                else:
+                                    distribution[user] = user_story['estimatedDuration'] / len(assignments)
+    return distribution
