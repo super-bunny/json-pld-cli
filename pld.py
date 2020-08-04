@@ -31,3 +31,17 @@ def get_distribution(pld_content):
                                 else:
                                     distribution[user] = user_story['estimatedDuration'] / len(assignments)
     return distribution
+
+
+def get_user_stories_by_user(pld_content, user):
+    user_stories = []
+    if 'deliverables' in pld_content:
+        for deliverables in pld_content['deliverables']:
+            if 'subsets' in deliverables:
+                for subset in deliverables['subsets']:
+                    if 'userStories' in subset:
+                        for user_story in subset['userStories']:
+                            assignments = map(str.lower, user_story['assignments'])
+                            if user in assignments:
+                                user_stories.append(user_story)
+    return user_stories
