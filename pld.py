@@ -45,3 +45,9 @@ def get_user_stories_by_user(pld_content, user):
                             if user in assignments:
                                 user_stories.append(user_story)
     return user_stories
+
+
+def get_last_version(pld_content):
+    if 'versions' in pld_content:
+        version = pld_content['versions'][-1]
+        return version
