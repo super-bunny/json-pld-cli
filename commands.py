@@ -19,3 +19,8 @@ def assignees_cmd(pld_content, user=None):
     pprint.pprint(assignees, width=120, sort_dicts=False, compact=False)
     print()
     print(f'{len(assignees)} user stories found for "{user}" user')
+
+
+def version_cmd(pld_content):
+    version = pld.get_last_version(pld_content)
+    print(version['version'])
