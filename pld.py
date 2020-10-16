@@ -1,3 +1,5 @@
+from functools import reduce
+
 import pld_messages
 
 
@@ -47,7 +49,21 @@ def get_user_stories_by_user(pld_content, user):
     return user_stories
 
 
+def compare_version(a, b):
+    a_arr = a["version"].split('.')
+    b_arr = b["version"].split('.')
+
+    a_arr = list(map(lambda x: int(x), a_arr))
+    b_arr = list(map(lambda x: int(x), b_arr))
+    if a_arr[0] != b_arr[0]:
+        return a if a_arr[0] > b_arr[0] else b
+    if a_arr[1] != b_arr[1]:
+        return a if a_arr[1] > b_arr[1] else b
+    if a_arr[2] != b_arr[2]:
+        return a if a_arr[2] > b_arr[2] else b
+
+
 def get_last_version(pld_content):
     if 'versions' in pld_content:
-        version = pld_content['versions'][-1]
-        return version
+        return reduce(lambda a, b: compare_version(a, b), pld_content['versions'])
+    return None
