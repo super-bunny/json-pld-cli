@@ -21,20 +21,22 @@ def read_file(file_path) -> str:
     return file_content
 
 
+def get_pld_content():
+    json_file_path = find_json_file()
+    if json_file_path is None:
+        print('No json file found')
+        sys.exit(1)
+    return json.loads(read_file(json_file_path))
+
+
 COMMAND_TABLE = {
     'init': lambda arguments: commands.init_cmd(arguments.get('file_name')),
-    'duration': lambda arguments: commands.duration_cmd(pld_content, arguments.get('verbose', False)),
-    'distribution': lambda arguments: commands.distribution_cmd(pld_content),
-    'assignees': lambda arguments: commands.assignees_cmd(pld_content, arguments.get('user')),
-    'version': lambda arguments: commands.version_cmd(pld_content),
+    'duration': lambda arguments: commands.duration_cmd(get_pld_content(), arguments.get('verbose', False)),
+    'distribution': lambda arguments: commands.distribution_cmd(get_pld_content()),
+    'assignees': lambda arguments: commands.assignees_cmd(get_pld_content(), arguments.get('user')),
+    'version': lambda arguments: commands.version_cmd(get_pld_content()),
     'test': lambda arguments: print(arguments)
 }
-
-json_file_path = find_json_file()
-if json_file_path is None:
-    print('No json file found')
-    sys.exit(1)
-pld_content = json.loads(read_file(json_file_path))
 
 parser = argparse.ArgumentParser(description='CLI to generate and manipulate Project Log Document JSON')
 subparsers = parser.add_subparsers(dest="command")
@@ -44,7 +46,7 @@ parser_init.add_argument('file_name', type=str, default='pld.json', nargs='?', h
 
 parser_duration = subparsers.add_parser('duration')
 parser_duration.add_argument('-v', type=bool, dest='verbose', const=True, default=False, nargs='?',
-                             help='print estimated duration for each user story')
+    help='print estimated duration for each user story')
 parser_repartition = subparsers.add_parser('distribution')
 
 parser_assignees = subparsers.add_parser('assignees')
