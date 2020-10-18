@@ -1,6 +1,50 @@
+import datetime
+import json
 from functools import reduce
 
 import pld_messages
+
+
+def init_pld(file_name: str) -> None:
+    pld = {
+        "$schema": "https://raw.githubusercontent.com/super-bunny/pld-json-schema/master/schemas/pld.json",
+        "config": {
+            "dateFormat": "dd/mm/yy"
+        },
+        "title": "Project Log Document",
+        "subTitle": "",
+        "description": "PLD document",
+        "authors": ["you"],
+        "versions": [{
+            "version": "1.0.0",
+            "date": f"{datetime.datetime.now():%d/%m/%Y}",
+            "author": ["you"],
+            "sections": "All",
+            "comment": "First version"
+        }],
+        "deliverables": [{
+            "type": "deliverable",
+            "name": "PLD (example)",
+            "subsets": [{
+                "type": "subset",
+                "name": "PLD first version (example)",
+                "userStories": [{
+                    "type": "userStory",
+                    "name": "Init PLD (example)",
+                    "description": "Create PLD from scratch",
+                    "user": "Project members",
+                    "action": "Follow project progression with a document",
+                    "definitionOfDone": ["PLD document"],
+                    "assignments": ["You"],
+                    "estimatedDuration": 1,
+                    "status": "To do"
+                }]
+            }]
+        }]
+    }
+    f = open(file_name, 'w')
+    json.dump(pld, f, indent=2)
+    f.close()
 
 
 def total_estimated_work_duration(pld_content, verbose_print=False) -> int:
