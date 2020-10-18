@@ -22,6 +22,7 @@ def read_file(file_path) -> str:
 
 
 COMMAND_TABLE = {
+    'init': lambda arguments: commands.init_cmd(arguments.get('file_name')),
     'duration': lambda arguments: commands.duration_cmd(pld_content, arguments.get('verbose', False)),
     'distribution': lambda arguments: commands.distribution_cmd(pld_content),
     'assignees': lambda arguments: commands.assignees_cmd(pld_content, arguments.get('user')),
@@ -37,6 +38,9 @@ pld_content = json.loads(read_file(json_file_path))
 
 parser = argparse.ArgumentParser(description='CLI to generate and manipulate Project Log Document JSON')
 subparsers = parser.add_subparsers(dest="command")
+
+parser_init = subparsers.add_parser('init')
+parser_init.add_argument('file_name', type=str, default='pld.json', nargs='?', help='PLD file name')
 
 parser_duration = subparsers.add_parser('duration')
 parser_duration.add_argument('-v', type=bool, dest='verbose', const=True, default=False, nargs='?',
